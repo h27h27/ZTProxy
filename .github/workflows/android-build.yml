@@ -1,0 +1,87 @@
+name: Android CI - Build APK with libzt
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_SDK_ROOT: /opt/android-sdk
+      ANDROID_HOME: /opt/android-sdk
+      LIBZT_AAR_URL: ${{ secrets.LIBZT_AAR_URL }}
+      LIBZT_AAR_ARTIFACT_REPO: h27h27/libzt
+      LIBZT_AAR_ARTIFACT_ID: 6818367355
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip wget curl openjdk-17-jdk
+
+      - name: Setup JAVA_HOME
+        run: |
+          echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+
+      - name: Download Android SDK cmdline-tools
+        run: |
+          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+          cd $ANDROID_SDK_ROOT/cmdline-tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
+          unzip -q cmdline-tools.zip
+          rm cmdline-tools.zip
+          mv cmdline-tools latest
+
+      - name: Accept licenses and install SDK components
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;25.1.8937393"
+
+      - name: Prepare libzt AAR
+        run: |
+          mkdir -p app/libs
+          if [ -f app/libs/libzt.aar ]; then
+            echo "Using committed libzt.aar"
+          elif [ -n "$LIBZT_AAR_URL" ]; then
+            echo "Downloading libzt AAR from LIBZT_AAR_URL"
+            wget -O app/libs/libzt.aar "$LIBZT_AAR_URL"
+          elif [ -n "$LIBZT_AAR_ARTIFACT_ID" ] && [ -n "$LIBZT_AAR_ARTIFACT_REPO" ]; then
+            echo "Downloading libzt AAR artifact $LIBZT_AAR_ARTIFACT_ID from $LIBZT_AAR_ARTIFACT_REPO"
+            curl -L -H "Authorization: token $GITHUB_TOKEN" \
+              -o /tmp/libzt-artifact.zip \
+              "https://api.github.com/repos/$LIBZT_AAR_ARTIFACT_REPO/actions/artifacts/$LIBZT_AAR_ARTIFACT_ID/zip"
+            unzip -q /tmp/libzt-artifact.zip -d /tmp/libzt-artifact
+            find /tmp/libzt-artifact -type f -name '*.aar' -print -exec cp {} app/libs/libzt.aar \;
+          else
+            echo "No libzt AAR available; attempting to build from source"
+            git clone https://github.com/h27h27/libzt.git /tmp/libzt
+            if [ -f /tmp/libzt/gradlew ]; then
+              cd /tmp/libzt
+              ./gradlew :libzt:assembleRelease --no-daemon
+              find . -type f -name '*.aar' -print -exec cp {} "$GITHUB_WORKSPACE/app/libs/libzt.aar" \; || true
+            else
+              echo "No gradlew found in libzt; user must supply libzt.aar via LIBZT_AAR_URL or commit it to app/libs." >&2
+              exit 1
+            fi
+          fi
+
+      - name: Show libs
+        run: ls -la app/libs || true
+
+      - name: Build APK
+        working-directory: ${{ github.workspace }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ztproxy-apks
+          path: app/build/outputs/**/*
