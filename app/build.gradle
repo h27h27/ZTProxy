@@ -13,18 +13,13 @@ android {
     }
 
     signingConfigs {
-    release {
-        // Use rootProject.file() to look in the project root, not app/
-        def keystorePath = System.getenv("KEYSTORE_PATH")
-        if (keystorePath != null) {
-            storeFile file(keystorePath)
-        } else {
+        release {
+            // Look for keystore in project root, not in app/
             storeFile rootProject.file("keystore.jks")
-        }
-        storePassword System.getenv("KEYSTORE_PASSWORD")
-        keyAlias System.getenv("KEY_ALIAS")
-        keyPassword System.getenv("KEY_PASSWORD")
-        enableV2Signing = true
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+            enableV2Signing = true
         }
     }
 
@@ -33,9 +28,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-        }
-        debug {
-            // Debug builds use the default debug keystore automatically
         }
     }
 
