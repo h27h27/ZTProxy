@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace 'com.h27h27.ztproxy'
     compileSdk 34
 
     defaultConfig {
