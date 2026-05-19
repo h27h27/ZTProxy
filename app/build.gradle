@@ -1,3 +1,5 @@
+apply plugin: 'com.android.application'
+
 android {
     namespace 'com.h27h27.ztproxy'
     compileSdk 34
@@ -25,7 +27,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release  // Now this exists!
+            signingConfig signingConfigs.release
         }
         debug {
             // Debug builds use the default debug keystore automatically
@@ -41,6 +43,5 @@ android {
 }
 
 dependencies {
-    // ... your existing dependencies ...
     implementation files('libs/libzt.aar')
 }
