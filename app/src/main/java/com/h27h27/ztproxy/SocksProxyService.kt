@@ -18,11 +18,18 @@ import java.net.Socket
 import java.util.concurrent.Executors
 
 class SocksProxyService : Service() {
-    private val PORT = 1080
+    private var port: Int = 1080
+    private var bindAddress: String = "127.0.0.1"
+    private var socketTimeout: Int = 30000
     private val executor = Executors.newCachedThreadPool()
 
     override fun onCreate() {
         super.onCreate()
+        // Load settings from preferences
+        port = PreferencesManager.getProxyPort(this)
+        bindAddress = PreferencesManager.getBindAddress(this)
+        socketTimeout = PreferencesManager.getSocketTimeout(this)
+        
         startForegroundServiceNotification()
 
         // Start SOCKS server in background
@@ -40,7 +47,7 @@ class SocksProxyService : Service() {
         }
         val notif = Notification.Builder(this, channelId)
             .setContentTitle("ZTProxy")
-            .setContentText("SOCKS proxy running")
+            .setContentText("SOCKS proxy running on $bindAddress:$port")
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .build()
         startForeground(1, notif)
@@ -48,18 +55,26 @@ class SocksProxyService : Service() {
 
     private fun runSocksServer() {
         val server = ServerSocket()
-        // Bind to all interfaces. Optionally change to ZeroTier virtual address if available.
+        // Bind to configured address and port
         server.reuseAddress = true
-        server.bind(InetSocketAddress(PORT))
+        try {
+            server.bind(InetSocketAddress(bindAddress, port))
+        } catch (e: Exception) {
+            return
+        }
 
         while (!server.isClosed) {
-            val client = server.accept()
-            executor.submit { handleClient(client) }
+            try {
+                val client = server.accept()
+                executor.submit { handleClient(client) }
+            } catch (e: Exception) {
+                break
+            }
         }
     }
 
     private fun handleClient(client: Socket) {
-        client.soTimeout = 30000
+        client.soTimeout = socketTimeout
         try {
             val `in` = client.getInputStream()
             val out = client.getOutputStream()

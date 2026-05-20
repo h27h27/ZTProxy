@@ -17,6 +17,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.h27h27.ztproxy.SettingsActivity"
+            android:exported="false" />
+
         <service android:name="com.h27h27.ztproxy.SocksProxyService"
                  android:exported="false" />
     </application>
