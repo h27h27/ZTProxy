@@ -20,13 +20,17 @@ object ServiceManager {
     }
 
     fun isSocksServiceRunning(context: Context): Boolean {
-        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
-        @Suppress("DEPRECATION")
-        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (service.service.className == SocksProxyService::class.java.name) {
-                return true
+        return try {
+            val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            @Suppress("DEPRECATION")
+            for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (service.service.className == SocksProxyService::class.java.name) {
+                    return true
+                }
             }
+            false
+        } catch (e: Exception) {
+            false
         }
-        return false
     }
 }

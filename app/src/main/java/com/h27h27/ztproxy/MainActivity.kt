@@ -1,7 +1,6 @@
 package com.h27h27.ztproxy
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -30,40 +29,54 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize views
-        statusText = findViewById(R.id.statusText)
-        proxyPortText = findViewById(R.id.proxyPortText)
-        addressText = findViewById(R.id.addressText)
-        toggleButton = findViewById(R.id.toggleButton)
-        statusIndicator = findViewById(R.id.statusIndicator)
-        ztStatusText = findViewById(R.id.ztStatusText)
-        ztAddressText = findViewById(R.id.ztAddressText)
-        networkIdInput = findViewById(R.id.networkIdInput)
-        joinNetworkButton = findViewById(R.id.joinNetworkButton)
-        settingsButton = findViewById(R.id.settingsButton)
-        val infoButton = findViewById<Button>(R.id.infoButton)
+        try {
+            // Initialize views
+            statusText = findViewById(R.id.statusText)
+            proxyPortText = findViewById(R.id.proxyPortText)
+            addressText = findViewById(R.id.addressText)
+            toggleButton = findViewById(R.id.toggleButton)
+            statusIndicator = findViewById(R.id.statusIndicator)
+            ztStatusText = findViewById(R.id.ztStatusText)
+            ztAddressText = findViewById(R.id.ztAddressText)
+            networkIdInput = findViewById(R.id.networkIdInput)
+            joinNetworkButton = findViewById(R.id.joinNetworkButton)
+            settingsButton = findViewById(R.id.settingsButton)
+            val infoButton = findViewById<Button>(R.id.infoButton)
 
-        // Set up button listeners
-        toggleButton.setOnClickListener { toggleProxy() }
-        joinNetworkButton.setOnClickListener { joinNetwork() }
-        settingsButton.setOnClickListener { openSettings() }
-        infoButton.setOnClickListener { showInfo() }
+            // Set up button listeners
+            toggleButton.setOnClickListener { toggleProxy() }
+            joinNetworkButton.setOnClickListener { joinNetwork() }
+            settingsButton.setOnClickListener { openSettings() }
+            infoButton.setOnClickListener { showInfo() }
 
-        // Initialize service state
-        updateServiceStatus()
-        updateUI()
+            // Initialize service state
+            updateServiceStatus()
+            updateUI()
 
-        // Start libzt manager initialization in background
-        CoroutineScope(Dispatchers.IO).launch {
-            LibZtManager.initialize(applicationContext)
-            // TODO: join network and configure virtual interface
-        }
-
-        // Auto-start service if enabled in preferences
-        if (PreferencesManager.getAutoStart(this)) {
-            if (!isServiceRunning) {
-                ServiceManager.startSocksService(this)
+            // Start libzt manager initialization in background
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    LibZtManager.initialize(applicationContext)
+                    // TODO: join network and configure virtual interface
+                } catch (e: Exception) {
+                    // Silently fail - libzt may not be available
+                }
             }
+
+            // Auto-start service if enabled in preferences
+            if (PreferencesManager.getAutoStart(this)) {
+                if (!isServiceRunning) {
+                    try {
+                        ServiceManager.startSocksService(this)
+                    } catch (e: Exception) {
+                        // Silently fail
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Log the error and show a toast
+            android.util.Log.e("MainActivity", "Error in onCreate", e)
+            Toast.makeText(this, "Error initializing UI: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -83,11 +96,11 @@ class MainActivity : AppCompatActivity() {
 
         if (isServiceRunning) {
             statusText.text = "Status: Running"
-            statusIndicator.setBackgroundColor(Color.parseColor("#4CAF50")) // Green
+            statusIndicator.setBackgroundColor(resources.getColor(R.color.green, null))
             toggleButton.text = "Stop"
         } else {
             statusText.text = "Status: Stopped"
-            statusIndicator.setBackgroundColor(Color.parseColor("#FF5252")) // Red
+            statusIndicator.setBackgroundColor(resources.getColor(R.color.red, null))
             toggleButton.text = "Start"
         }
 
