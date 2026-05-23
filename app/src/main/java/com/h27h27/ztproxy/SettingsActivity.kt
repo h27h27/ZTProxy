@@ -21,6 +21,8 @@ class SettingsActivity : AppCompatActivity() {
             val autoStartCheckbox = findViewById<android.widget.CheckBox>(R.id.autoStartCheckbox)
             val debugLoggingCheckbox = findViewById<android.widget.CheckBox>(R.id.debugLoggingCheckbox)
             val timeoutInput = findViewById<EditText>(R.id.timeoutInput)
+            val useVirtualInterfaceCheckbox = findViewById<android.widget.CheckBox>(R.id.useVirtualInterfaceCheckbox)
+            val networkIdInput = findViewById<EditText>(R.id.networkIdInput)
 
             // Load current settings
             proxyPortInput.setText(PreferencesManager.getProxyPort(this).toString())
@@ -28,6 +30,8 @@ class SettingsActivity : AppCompatActivity() {
             autoStartCheckbox.isChecked = PreferencesManager.getAutoStart(this)
             debugLoggingCheckbox.isChecked = PreferencesManager.getDebugLogging(this)
             timeoutInput.setText((PreferencesManager.getSocketTimeout(this) / 1000).toString())
+            useVirtualInterfaceCheckbox.isChecked = PreferencesManager.getUseVirtualInterface(this)
+            networkIdInput.setText(PreferencesManager.getNetworkId(this))
 
             backButton.setOnClickListener {
                 finish()
@@ -46,12 +50,16 @@ class SettingsActivity : AppCompatActivity() {
                     val timeout = timeoutInput.text.toString().toIntOrNull() ?: 30
                     val autoStart = autoStartCheckbox.isChecked
                     val debug = debugLoggingCheckbox.isChecked
+                    val useVirtual = useVirtualInterfaceCheckbox.isChecked
+                    val netId = networkIdInput.text.toString().trim()
 
                     PreferencesManager.setProxyPort(this, port)
                     PreferencesManager.setBindAddress(this, address)
                     PreferencesManager.setSocketTimeout(this, timeout)
                     PreferencesManager.setAutoStart(this, autoStart)
                     PreferencesManager.setDebugLogging(this, debug)
+                    PreferencesManager.setUseVirtualInterface(this, useVirtual)
+                    PreferencesManager.setNetworkId(this, netId)
 
                     Toast.makeText(this, "Settings saved. Restart the service to apply changes.", Toast.LENGTH_LONG)
                         .show()

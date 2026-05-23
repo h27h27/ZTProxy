@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var statusIndicator: View
     private lateinit var ztStatusText: TextView
     private lateinit var ztAddressText: TextView
+    private lateinit var ztNetworkIdText: TextView
     private lateinit var networkIdInput: EditText
     private lateinit var joinNetworkButton: Button
     private lateinit var settingsButton: Button
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
             statusIndicator = findViewById(R.id.statusIndicator)
             ztStatusText = findViewById(R.id.ztStatusText)
             ztAddressText = findViewById(R.id.ztAddressText)
+            ztNetworkIdText = findViewById(R.id.ztNetworkIdText)
             networkIdInput = findViewById(R.id.networkIdInput)
             joinNetworkButton = findViewById(R.id.joinNetworkButton)
             settingsButton = findViewById(R.id.settingsButton)
@@ -114,6 +116,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             ztStatusText.text = "Status: Not initialized"
             ztAddressText.text = "Virtual Address: -"
+        }
+        val netId = PreferencesManager.getNetworkId(this)
+        if (netId.isNotEmpty()) {
+            ztNetworkIdText.text = "Network ID: $netId"
+        } else {
+            ztNetworkIdText.text = "Network ID: -"
         }
     }
 
