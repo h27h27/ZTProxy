@@ -1,4 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ZTProxy</string>
+
+    <!-- Proxy Settings -->
+    <string name="proxy_settings">SOCKS5 Proxy Settings</string>
+    <string name="proxy_port">Proxy Port</string>
+    <string name="proxy_port_summary">Port number (1024-65535)</string>
+    <string name="bind_address">Bind Address</string>
+    <string name="bind_address_summary">IP address to bind to</string>
+    <string name="socket_timeout">Socket Timeout</string>
+    <string name="socket_timeout_summary">Timeout in seconds</string>
+
+    <!-- ZeroTier Network -->
+    <string name="zerotier_network">ZeroTier Network</string>
+    <string name="network_id">Network ID</string>
+    <string name="network_id_summary">ZeroTier network ID to join</string>
+    <string name="use_virtual_interface">Use Virtual Interface</string>
+    <string name="use_virtual_interface_summary">Enable ZeroTier virtual network interface</string>
+
+    <!-- Planet Settings -->
+    <string name="planet_settings">Planet Configuration</string>
+    <string name="use_custom_planet">Use Custom Planet</string>
+    <string name="planet_use_custom_summary">Use custom planet configuration</string>
+    <string name="set_planet_file">Set Planet File</string>
+    <string name="load_planet_file">Load Planet File</string>
+    <string name="file">From File</string>
+    <string name="import_via_file">Select from device storage</string>
+    <string name="url">From URL</string>
+    <string name="import_via_url">Download from URL</string>
+    <string name="enter_planet_file_url">Enter Planet File URL</string>
+    <string name="planet_wrong_format">Invalid planet file format</string>
+    <string name="cannot_open_planet">Cannot open planet file</string>
+    <string name="cannot_download_planet_file">Cannot download planet file</string>
+    <string name="planet_download_timeout">Planet download timeout</string>
+    <string name="set_planet_succ">Planet file loaded successfully</string>
+    <string name="downloading">Downloading...</string>
+
+    <!-- Moon Settings -->
+    <string name="moon_settings">Moon Configuration</string>
+    <string name="set_moon_file">Set Moon File</string>
+    <string name="moon_wrong_format">Invalid moon file format</string>
+    <string name="cannot_open_moon">Cannot open moon file</string>
+    <string name="cannot_download_moon_file">Cannot download moon file</string>
+    <string name="moon_download_timeout">Moon download timeout</string>
+    <string name="set_moon_succ">Moon file loaded successfully</string>
+
+    <!-- Advanced Settings -->
+    <string name="advanced">Advanced Settings</string>
+    <string name="auto_start_proxy">Auto-start Proxy on Boot</string>
+    <string name="auto_start_proxy_summary">Automatically start SOCKS proxy when device boots</string>
+    <string name="debug_logging">Debug Logging</string>
+    <string name="debug_logging_summary">Enable debug logging for troubleshooting</string>
 </resources>

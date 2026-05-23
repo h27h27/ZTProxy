@@ -11,6 +11,9 @@ object PreferencesManager {
     private const val KEY_DEBUG_LOGGING = "debug_logging"
     private const val KEY_NETWORK_ID = "network_id"
     private const val KEY_USE_VIRTUAL_INTERFACE = "use_virtual_interface"
+    private const val KEY_PLANET_URL = "planet_url"
+    private const val KEY_PLANET_FILE_URI = "planet_file_uri"
+    private const val KEY_MOON_FILE_URI = "moon_file_uri"
 
     fun getProxyPort(context: Context): Int {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -80,5 +83,35 @@ object PreferencesManager {
     fun setUseVirtualInterface(context: Context, enabled: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().putBoolean(KEY_USE_VIRTUAL_INTERFACE, enabled).apply()
+    }
+
+    fun getPlanetUrl(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(KEY_PLANET_URL, "") ?: ""
+    }
+
+    fun setPlanetUrl(context: Context, url: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putString(KEY_PLANET_URL, url).apply()
+    }
+
+    fun getPlanetFileUri(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(KEY_PLANET_FILE_URI, "") ?: ""
+    }
+
+    fun setPlanetFileUri(context: Context, uri: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putString(KEY_PLANET_FILE_URI, uri).apply()
+    }
+
+    fun getMoonFileUri(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(KEY_MOON_FILE_URI, "") ?: ""
+    }
+
+    fun setMoonFileUri(context: Context, uri: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putString(KEY_MOON_FILE_URI, uri).apply()
     }
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- SOCKS Proxy Settings -->
+    <PreferenceCategory android:title="@string/proxy_settings">
+        <android.preference.EditTextPreference
+            android:defaultValue="1080"
+            android:key="proxy_port"
+            android:inputType="number"
+            android:title="@string/proxy_port"
+            android:summary="@string/proxy_port_summary" />
+        <android.preference.EditTextPreference
+            android:defaultValue="127.0.0.1"
+            android:key="bind_address"
+            android:title="@string/bind_address"
+            android:summary="@string/bind_address_summary" />
+        <android.preference.EditTextPreference
+            android:defaultValue="30"
+            android:key="socket_timeout"
+            android:inputType="number"
+            android:title="@string/socket_timeout"
+            android:summary="@string/socket_timeout_summary" />
+    </PreferenceCategory>
+
+    <!-- ZeroTier Network Settings -->
+    <PreferenceCategory android:title="@string/zerotier_network">
+        <android.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="network_id"
+            android:title="@string/network_id"
+            android:summary="@string/network_id_summary" />
+        <android.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="use_virtual_interface"
+            android:title="@string/use_virtual_interface"
+            android:summary="@string/use_virtual_interface_summary" />
+    </PreferenceCategory>
+
+    <!-- Planet Settings -->
+    <PreferenceCategory android:title="@string/planet_settings">
+        <android.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="planet_use_custom"
+            android:title="@string/use_custom_planet"
+            android:summary="@string/planet_use_custom_summary" />
+        <Preference
+            android:key="set_planet_file"
+            android:title="@string/set_planet_file" />
+    </PreferenceCategory>
+
+    <!-- Moon Settings -->
+    <PreferenceCategory android:title="@string/moon_settings">
+        <Preference
+            android:key="set_moon_file"
+            android:title="@string/set_moon_file" />
+    </PreferenceCategory>
+
+    <!-- Advanced Settings -->
+    <PreferenceCategory android:title="@string/advanced">
+        <android.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="auto_start"
+            android:title="@string/auto_start_proxy"
+            android:summary="@string/auto_start_proxy_summary" />
+        <android.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="debug_logging"
+            android:title="@string/debug_logging"
+            android:summary="@string/debug_logging_summary" />
+    </PreferenceCategory>
+</PreferenceScreen>

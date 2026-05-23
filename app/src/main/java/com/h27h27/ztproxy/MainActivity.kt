@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ztStatusText: TextView
     private lateinit var ztAddressText: TextView
     private lateinit var ztNetworkIdText: TextView
+    private lateinit var ztPlanetStatusText: TextView
+    private lateinit var ztMoonStatusText: TextView
     private lateinit var networkIdInput: EditText
     private lateinit var joinNetworkButton: Button
     private lateinit var settingsButton: Button
@@ -40,10 +42,13 @@ class MainActivity : AppCompatActivity() {
             ztStatusText = findViewById(R.id.ztStatusText)
             ztAddressText = findViewById(R.id.ztAddressText)
             ztNetworkIdText = findViewById(R.id.ztNetworkIdText)
+            ztPlanetStatusText = findViewById(R.id.ztPlanetStatusText)
+            ztMoonStatusText = findViewById(R.id.ztMoonStatusText)
             networkIdInput = findViewById(R.id.networkIdInput)
             joinNetworkButton = findViewById(R.id.joinNetworkButton)
             settingsButton = findViewById(R.id.settingsButton)
             val infoButton = findViewById<Button>(R.id.infoButton)
+            networkIdInput.setText(PreferencesManager.getNetworkId(this))
 
             // Set up button listeners
             toggleButton.setOnClickListener { toggleProxy() }
@@ -122,6 +127,21 @@ class MainActivity : AppCompatActivity() {
             ztNetworkIdText.text = "Network ID: $netId"
         } else {
             ztNetworkIdText.text = "Network ID: -"
+        }
+
+        val planetUrl = PreferencesManager.getPlanetUrl(this)
+        val planetFile = PreferencesManager.getPlanetFileUri(this)
+        ztPlanetStatusText.text = when {
+            planetUrl.isNotBlank() -> "Planet URL: $planetUrl"
+            planetFile.isNotBlank() -> "Planet file selected"
+            else -> "Planet config: none"
+        }
+
+        val moonFile = PreferencesManager.getMoonFileUri(this)
+        ztMoonStatusText.text = if (moonFile.isNotBlank()) {
+            "Moon file selected"
+        } else {
+            "Moon file: none"
         }
     }
 

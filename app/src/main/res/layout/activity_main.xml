@@ -139,12 +139,28 @@
             android:text="Virtual Address: -"
             android:textSize="12sp"
             android:layout_marginTop="4dp" />
-        
+
         <TextView
             android:id="@+id/ztNetworkIdText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Network ID: -"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/ztPlanetStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Planet config: none"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/ztMoonStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moon file: none"
             android:textSize="12sp"
             android:layout_marginTop="4dp" />
     </LinearLayout>
